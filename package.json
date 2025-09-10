@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
+  "backend": "https://linkkeeper-backend.onrender.com",
   "scripts": {
     "build": "tsc -b",
     "postinstall": "tsc -b",
