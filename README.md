@@ -55,27 +55,29 @@ It includes **user authentication**, **JWT access/refresh token flow**, **taggin
 
 ## 📂 Project Structure
 
+```
 src/
-┣ models/
-┃ ┣ content.model.ts
-┃ ┣ link.model.ts
-┃ ┣ tag.model.ts
-┃ ┗ user.model.ts
-┣ middlewares/
-┃ ┗ auth.middleware.ts
-┣ routes/
-┃ ┣ user.routes.ts
-┃ ┣ tag.routes.ts
-┃ ┣ content.routes.ts
-┃ ┗ index.routes.ts
-┣ utils/
-┃ ┗ helper.ts
-┣ app.ts
-┗ server.ts
+├─ models/
+│ ├─ content.model.ts
+│ ├─ link.model.ts
+│ ├─ tag.model.ts
+│ └─ user.model.ts
+├─ middlewares/
+│ └─ auth.middleware.ts
+├─ routes/
+│ ├─ user.routes.ts
+│ ├─ tag.routes.ts
+│ ├─ content.routes.ts
+│ └─ index.routes.ts
+├─ utils/
+│ └─ helper.ts
+├─ app.ts
+└─ server.ts
 controllers/
-┣ user.controller.ts # Authentication & user profile
-┣ content.controller.ts # Content management & sharing
-┗ tag.controller.ts # Tagging system
+├─ user.controller.ts # Authentication & user profile
+├─ content.controller.ts # Content management & sharing
+└─ tag.controller.ts # Tagging system
+```
 
 ---
 
