@@ -1,5 +1,4 @@
 # 📌 LinkKeeper
-[![Live Backend](https://img.shields.io/badge/API-Live-brightgreen)](https://linkkeeper-backend.onrender.com)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -11,6 +10,9 @@
 LinkKeeper is a full-stack application to **save, organize, and share links/content** with tags.  
 It includes **user authentication**, **JWT access/refresh token flow**, **tagging system**, and **public share links**.
 
+## 🌐 Live Backend
+You can test the API at:
+[https://linkkeeper-backend.onrender.com](https://linkkeeper-backend.onrender.com)
 ---
 
 ## 🚀 Features
