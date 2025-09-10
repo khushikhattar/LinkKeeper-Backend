@@ -4,11 +4,12 @@
   "main": "server.js",
   "scripts": {
     "build": "tsc -b",
+    "postinstall": "tsc -b",
     "start": "node ./dist/server.js",
     "dev": "nodemon ./src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Khushi Khattar",
   "license": "ISC",
   "description": "",
   "devDependencies": {
