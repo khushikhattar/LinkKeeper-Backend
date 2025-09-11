@@ -14,6 +14,6 @@ router.post("/add", verifyUser, AddContent);
 router.get("/user-content", verifyUser, UserContent);
 router.post("/share", verifyUser, Share);
 router.delete("/:id", verifyUser, DeleteContent);
+router.get("/my-link", verifyUser, MyLink);
 router.get("/:hash", ShareLink);
-router.get("/my-link", MyLink);
 export default router;

@@ -12,7 +12,6 @@ const addSchema = z.object({
 });
 type add = z.infer<typeof addSchema>;
 
-// Controller to add new content for the authenticated user
 const AddContent = async (req: Request, res: Response) => {
   const parsedData = addSchema.safeParse(req.body);
   console.log("Parsed Data:", parsedData);
@@ -30,15 +29,12 @@ const AddContent = async (req: Request, res: Response) => {
 
   try {
     const data: add = parsedData.data;
-    // Create new content document with user reference
     const createContent = await Content.create({
       link: data.link,
       title: data.title,
       type: data.type,
-      userId: req.user._id, // associate content with the user
+      userId: req.user._id,
     });
-
-    // Update user's content array to include this new content
     await User.findByIdAndUpdate(req.user._id, {
       $push: { content: createContent._id },
     });
@@ -53,8 +49,6 @@ const AddContent = async (req: Request, res: Response) => {
     return;
   }
 };
-
-// Controller to delete content by ID for authenticated user
 const DeleteContent = async (req: Request, res: Response) => {
   const deleteId = req.params.id;
 
@@ -64,7 +58,6 @@ const DeleteContent = async (req: Request, res: Response) => {
   }
 
   try {
-    // Remove content document owned by the user
     const deletedContent = await Content.findOneAndDelete({
       _id: deleteId,
       userId: req.user._id,
@@ -88,7 +81,6 @@ const DeleteContent = async (req: Request, res: Response) => {
   }
 };
 
-// Controller to fetch all content for the authenticated user
 const UserContent = async (req: Request, res: Response) => {
   if (!req.user || !req.user._id) {
     res.status(401).json({ message: "User not authenticated" });
@@ -126,7 +118,6 @@ const Share = async (req: Request, res: Response) => {
 
   if (typeof share === "boolean") {
     if (share) {
-      // Check if a link already exists for this user
       const existingLink = await Link.findOne({
         userId: req.user._id,
       });
@@ -135,7 +126,6 @@ const Share = async (req: Request, res: Response) => {
         res.json({ hash: existingLink.hash });
         return;
       }
-      // Generate and save a new hash link
       const hash = generateNanoId(10);
       await Link.create({
         userId: req.user._id,
@@ -143,12 +133,10 @@ const Share = async (req: Request, res: Response) => {
       });
       res.json({ hash });
     } else {
-      // Remove existing link associated with user if share is false
       await Link.deleteOne({ userId: req.user._id });
       res.json({ message: "Removed link" });
     }
   } else {
-    // Handle case when 'share' is missing or invalid
     res.status(400).json({ message: "'share' boolean flag is required" });
     return;
   }
@@ -182,7 +170,7 @@ const ShareLink = async (req: Request, res: Response) => {
     return;
   }
 };
-// Check current user's share status
+
 const MyLink = async (req: Request, res: Response) => {
   if (!req.user || !req.user._id) {
     res.status(401).json({ message: "Unauthorized" });
