@@ -118,28 +118,26 @@ const Share = async (req: Request, res: Response) => {
 
   if (typeof share === "boolean") {
     if (share) {
-      const existingLink = await Link.findOne({
-        userId: req.user._id,
-      });
+      let existingLink = await Link.findOne({ userId: req.user._id });
 
-      if (existingLink) {
-        res.json({ hash: existingLink.hash });
-        return;
+      if (!existingLink) {
+        const hash = generateNanoId(10);
+        existingLink = await Link.create({ userId: req.user._id, hash });
       }
-      const hash = generateNanoId(10);
-      await Link.create({
-        userId: req.user._id,
-        hash,
+      const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
+      res.json({
+        hash: existingLink.hash,
+        url: `${baseURL}/content/${existingLink.hash}`,
       });
-      res.json({ hash });
     } else {
       await Link.deleteOne({ userId: req.user._id });
       res.json({ message: "Removed link" });
+      return;
     }
-  } else {
-    res.status(400).json({ message: "'share' boolean flag is required" });
-    return;
   }
+
+  res.status(400).json({ message: "'share' boolean flag is required" });
+  return;
 };
 
 const ShareLink = async (req: Request, res: Response) => {
@@ -181,9 +179,11 @@ const MyLink = async (req: Request, res: Response) => {
     const existingLink = await Link.findOne({ userId: req.user._id });
 
     if (existingLink) {
+      const baseURL = process.env.FRONTEND_URL || "http://localhost:5173";
       res.json({
         share: true,
         hash: existingLink.hash,
+        url: `${baseURL}/content/${existingLink.hash}`,
       });
     } else {
       res.json({
@@ -193,7 +193,7 @@ const MyLink = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching link:", error);
     res.status(500).json({ message: "Server error" });
+    return;
   }
 };
-
 export { AddContent, DeleteContent, UserContent, Share, ShareLink, MyLink };
