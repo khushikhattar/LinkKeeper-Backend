@@ -17,6 +17,14 @@ const generateAccessAndRefreshTokens = async (userId: string) => {
     throw new Error(`Error generating tokens: ${(error as Error).message}`);
   }
 };
+const getCookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    secure: isProduction, // true only in production
+    sameSite: isProduction ? ("none" as const) : ("lax" as const), // cast to exact literal
+  };
+};
 
 const signupSchema = z
   .object({
@@ -57,7 +65,7 @@ const signUp = async (req: Request, res: Response) => {
       username: data.username,
       name: data.name,
       email: data.email,
-      password: data.password, 
+      password: data.password,
       refreshToken: "",
     });
     if (!createUser) {
@@ -75,7 +83,7 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const loginSchema = z.object({
-  identifier: z.string(), 
+  identifier: z.string(),
   password: z.string(),
 });
 
@@ -89,7 +97,7 @@ const login = async (req: Request, res: Response) => {
       return;
     }
     const data: loginData = parsedResult.data;
-   
+
     const existedUser = await User.findOne({
       $or: [{ username: data.identifier }, { email: data.identifier }],
     });
@@ -103,11 +111,11 @@ const login = async (req: Request, res: Response) => {
       res.status(401).json({ message: "Invalid Password" });
       return;
     }
-  
+
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       existedUser._id
     );
-    
+
     const loginUser = await User.findById(existedUser._id).select(
       "-refreshToken -password"
     );
@@ -115,8 +123,8 @@ const login = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Error logging the user" });
       return;
     }
-   
-    const options = { httpOnly: true, secure: true };
+
+    const options = getCookieOptions();
     res
       .status(200)
       .cookie("accessToken", accessToken, options)
@@ -133,7 +141,6 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-
 const logout = async (req: Request, res: Response) => {
   if (!req.user || !req.user._id) {
     res.status(401).json("Unauthorised Request");
@@ -145,8 +152,8 @@ const logout = async (req: Request, res: Response) => {
       { $unset: { refreshToken: 1 } },
       { new: true, timestamps: false }
     );
-    
-    const options = { httpOnly: true, secure: true };
+
+    const options = getCookieOptions();
     res
       .status(200)
       .clearCookie("accessToken", options)
@@ -252,7 +259,7 @@ const refreshAccessToken = async (req: Request, res: Response) => {
     const token = jwt.verify(
       oldRefreshToken,
       process.env.REFRESH_TOKEN_SECRET!
-    ) as { _id: string }; 
+    ) as { _id: string };
 
     if (token._id !== user._id.toString()) {
       console.log(token._id);
@@ -264,8 +271,9 @@ const refreshAccessToken = async (req: Request, res: Response) => {
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user._id.toString()
     );
-
-    const options = { httpOnly: true, secure: true };
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+    const options = getCookieOptions();
     res
       .status(200)
       .cookie("accessToken", accessToken, options)
