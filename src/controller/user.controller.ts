@@ -116,7 +116,7 @@ const login = async (req: Request, res: Response) => {
       return;
     }
    
-    const options = { httpOnly: true, secure: true };
+    const options = { httpOnly: true, secure: false};
     res
       .status(200)
       .cookie("accessToken", accessToken, options)
@@ -146,7 +146,7 @@ const logout = async (req: Request, res: Response) => {
       { new: true, timestamps: false }
     );
     
-    const options = { httpOnly: true, secure: true };
+    const options = { httpOnly: true, secure: false };
     res
       .status(200)
       .clearCookie("accessToken", options)
