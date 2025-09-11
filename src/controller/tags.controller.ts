@@ -153,5 +153,19 @@ const searchContent = async (req: Request, res: Response) => {
     return;
   }
 };
+const GetUserTags = async (req: Request, res: Response) => {
+  if (!req.user || !req.user._id) {
+    res.status(401).json({ message: "Unauthorized request" });
+    return;
+  }
 
-export { AddTag, AddTagsToContent, deleteTags, searchContent };
+  try {
+    const tags = await Tag.find({ userId: req.user._id });
+    res.status(200).json({ tags });
+  } catch (err) {
+    console.error("Error fetching user tags:", err);
+    res.status(500).json({ message: "Server error" });
+    return;
+  }
+};
+export { AddTag, AddTagsToContent, deleteTags, searchContent, GetUserTags };
