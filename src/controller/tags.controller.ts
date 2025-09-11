@@ -98,18 +98,18 @@ const deleteTags = async (req: Request, res: Response) => {
     res.status(401).json({ message: "Unauthorized Request" });
     return;
   }
+
   try {
-    const content = await Content.findOne({
-      _id: contentId,
-      userId: req.user._id,
-    });
+    const content = await Content.findOneAndUpdate(
+      { _id: contentId, userId: req.user._id },
+      { $pull: { tags: new mongoose.Types.ObjectId(tagId) } },
+      { new: true }
+    ).populate("tags");
+
     if (!content) {
       res.status(404).json({ message: "Content not found or unauthorized" });
       return;
     }
-    content.tags = content.tags.filter((tag) => tag.toString() !== tagId);
-
-    await content.save();
 
     res.status(200).json({
       message: "Tag removed from content successfully",
@@ -121,6 +121,7 @@ const deleteTags = async (req: Request, res: Response) => {
     return;
   }
 };
+
 const searchContent = async (req: Request, res: Response) => {
   try {
     const { tagIds, beforeDate } = req.query;
