@@ -8,10 +8,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://link-keeper-frontend.vercel.app",
 ];
-app.use(express.json());
-app.use(cookieParser());
 
-app.use(cors());
 const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -24,7 +21,11 @@ const corsOptions: cors.CorsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Authorization", "Content-Type"],
 };
+
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
+
 app.use("/api/v1", rootRouter);
 
 export { app };
