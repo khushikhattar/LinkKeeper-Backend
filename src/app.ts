@@ -4,10 +4,7 @@ import cors from "cors";
 import rootRouter from "./routes/index.routes";
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://link-keeper-frontend.vercel.app",
-];
+const allowedOrigins = ["https://link-keeper-frontend.vercel.app"];
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
