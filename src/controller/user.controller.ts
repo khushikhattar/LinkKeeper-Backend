@@ -21,9 +21,9 @@ const getCookieOptions = () => {
   const isProduction = process.env.NODE_ENV === "production";
   return {
     httpOnly: true,
-    secure: isProduction, // true only in production
-    sameSite: isProduction ? ("none" as const) : ("lax" as const), // cast to exact literal
-  };
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  } as const;
 };
 
 const signupSchema = z
