@@ -4,10 +4,14 @@ import cors from "cors";
 import rootRouter from "./routes/index.routes";
 
 const app = express();
-const allowedOrigins = ["https://link-keeper-frontend.vercel.app"];
 
-const corsOptions: cors.CorsOptions = {
-  origin: function (origin, callback) {
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://link-keeper-frontend.vercel.app",
+];
+
+const corsOptions = {
+  origin: function (origin: string | undefined, callback: Function) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -20,6 +24,20 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "");
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    );
+    res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
+    res.header("Access-Control-Allow-Credentials", "true");
+    return res.sendStatus(204); // No Content
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 
