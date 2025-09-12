@@ -4,7 +4,14 @@ import cors from "cors";
 import rootRouter from "./routes/index.routes";
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      callback(null, origin);
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
