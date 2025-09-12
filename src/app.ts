@@ -27,8 +27,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+app.options("/", cors());
 
 app.use("/api/v1", rootRouter);
-
 export { app };
