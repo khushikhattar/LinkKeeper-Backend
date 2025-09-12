@@ -22,13 +22,14 @@ export const verifyUser = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.headers.origin);
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-       res.status(401).json({ message: "Unauthorized Request" });
-       return;
+      res.status(401).json({ message: "Unauthorized Request" });
+      return;
     }
 
     const decodedToken = jwt.verify(
@@ -42,8 +43,8 @@ export const verifyUser = async (
 
     if (!user) {
       console.log("User not found");
-       res.status(401).json({ message: "Invalid Access Token" });
-       return;
+      res.status(401).json({ message: "Invalid Access Token" });
+      return;
     }
 
     req.user = user;
@@ -51,9 +52,9 @@ export const verifyUser = async (
     next();
   } catch (error) {
     console.error("Error in verifying the user", error);
-       res
+    res
       .status(401)
       .json({ message: (error as Error)?.message || "Invalid access token" });
-       return;
+    return;
   }
 };
