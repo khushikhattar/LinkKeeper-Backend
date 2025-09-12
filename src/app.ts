@@ -6,9 +6,8 @@ import rootRouter from "./routes/index.routes";
 const app = express();
 app.use(
   cors({
-    origin: (origin, callback) => {
-      callback(null, origin);
-    },
+    origin: "https://link-keeper-frontend.vercel.app/",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
