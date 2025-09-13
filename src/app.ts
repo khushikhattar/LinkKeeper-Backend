@@ -5,21 +5,10 @@ import rootRouter from "./routes/index.routes";
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://link-keeper-frontend.vercel.app",
-];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: true, // ✅ reflect the request origin (dynamically allow all)
+    credentials: true, // ⚠️ must still be careful if using cookies
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Origin",
@@ -28,15 +17,18 @@ app.use(
       "Accept",
       "Authorization",
       "Cookie",
-      "Set-Cookie",
-    ],
-    exposedHeaders: ["Set-Cookie"],
+    ], // ✅ all common headers
+    exposedHeaders: ["Authorization", "Set-Cookie"], // ✅ expose useful headers
     preflightContinue: false,
     optionsSuccessStatus: 204,
   })
 );
 
+// ✅ Explicit OPTIONS handler (preflight requests)
+app.options("/*", cors());
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/v1", rootRouter);
+
 export { app };
