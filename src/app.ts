@@ -7,7 +7,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://link-keeper-coral.vercel.app",
+  "https://link-keeper-frontend.vercel.app",
   // Add any other production domains here
 ];
 
