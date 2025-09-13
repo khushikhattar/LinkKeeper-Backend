@@ -17,15 +17,12 @@ app.use(
       "Accept",
       "Authorization",
       "Cookie",
-    ], // ✅ all common headers
+    ],
     exposedHeaders: ["Authorization", "Set-Cookie"], // ✅ expose useful headers
     preflightContinue: false,
     optionsSuccessStatus: 204,
   })
 );
-
-// ✅ Explicit OPTIONS handler (preflight requests)
-app.options("/*", cors());
 
 app.use(express.json());
 app.use(cookieParser());
