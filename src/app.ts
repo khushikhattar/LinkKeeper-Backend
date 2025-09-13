@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import rootRouter from "./routes/index.routes";
@@ -24,7 +24,9 @@ app.use(
     allowedHeaders: ["Authorization", "Content-Type"],
   })
 );
-
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).send({ message: "Server is healthy" });
+});
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/v1", rootRouter);
