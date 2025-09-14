@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import rootRouter from "./routes/index.routes";
+import { loggingMiddleware } from "./middlewares/logging.middleware";
 
 const app = express();
 
@@ -12,6 +13,7 @@ const allowedOrigins = [
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(loggingMiddleware);
 
 // ✅ Apply CORS only to /api/v1 routes (no "*" or "/*")
 app.use(
