@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: allowedOrigins, // safer than true if using cookies
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: [
       "Origin",
       "X-Requested-With",
