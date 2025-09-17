@@ -20,7 +20,7 @@ You can test the API at:
 - 🔑 **Authentication**
 
   - Sign up, login, logout
-  - Access & refresh tokens stored in cookies
+  - Access & refresh tokens stored in local storage
   - Secure password handling with hashing
   - Profile update & account deletion
 
@@ -50,7 +50,7 @@ You can test the API at:
 - **Backend:** Node.js, Express.js, TypeScript
 - **Database:** MongoDB + Mongoose
 - **Validation:** Zod
-- **Authentication:** JWT (Access + Refresh Tokens stored in cookies)
+- **Authentication:** JWT (Access + Refresh Tokens stored in local storage)
 - **Utilities:** NanoID
 
 ---
@@ -150,7 +150,6 @@ npm run dev
 
 ## 🧑‍💻 Development Notes
 
-- Cookies are set with { httpOnly: true, secure: true } for security.
 - Passwords are hashed using bcrypt before saving (user.model.ts).
 - Refresh tokens are stored in the database and rotated on login/refresh.
 - API request validation is handled with Zod.
