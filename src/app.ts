@@ -15,11 +15,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(loggingMiddleware);
 
-// ✅ Apply CORS only to /api/v1 routes (no "*" or "/*")
 app.use(
   "/api/v1",
   cors({
-    origin: allowedOrigins, // safer than true if using cookies
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: [
@@ -36,4 +35,4 @@ app.use(
   rootRouter
 );
 
-export { app };
+export default app;
