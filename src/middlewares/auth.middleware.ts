@@ -22,39 +22,32 @@ export const verifyUser = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.headers.origin);
-    const token =
-      req.cookies?.accessToken ||
-      req.header("Authorization")?.replace("Bearer ", "");
-
-    if (!token) {
-      res.status(401).json({ message: "Unauthorized Request" });
+    const authHeader = req.header("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ message: "Unauthorized request" });
       return;
     }
+
+    const token = authHeader.replace("Bearer ", "");
 
     const decodedToken = jwt.verify(
       token,
       process.env.ACCESS_TOKEN_SECRET!
     ) as UserPayload;
-
     const user = await User.findById(decodedToken._id).select(
       "-password -refreshToken"
     );
 
     if (!user) {
-      console.log("User not found");
-      res.status(401).json({ message: "Invalid Access Token" });
+      res.status(401).json({ message: "Invalid access token" });
       return;
     }
 
     req.user = user;
-    console.log("User attached to request");
     next();
   } catch (error) {
-    console.error("Error in verifying the user", error);
-    res
-      .status(401)
-      .json({ message: (error as Error)?.message || "Invalid access token" });
+    console.error("Error verifying user:", error);
+    res.status(401).json({ message: "Invalid access token" });
     return;
   }
 };
