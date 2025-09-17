@@ -1,5 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
-import cookieParser from "cookie-parser";
+import express from "express";
 import cors from "cors";
 import rootRouter from "./routes/index.routes";
 import { loggingMiddleware } from "./middlewares/logging.middleware";
@@ -10,16 +9,9 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://link-keeper-frontend.vercel.app",
 ];
-
-app.use(express.json());
-app.use(cookieParser());
-app.use(loggingMiddleware);
-
 app.use(
-  "/api/v1",
   cors({
     origin: allowedOrigins,
-    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: [
       "Origin",
@@ -27,12 +19,13 @@ app.use(
       "Content-Type",
       "Accept",
       "Authorization",
-      "Cookie",
     ],
-    exposedHeaders: ["Authorization", "Set-Cookie"],
-    optionsSuccessStatus: 204,
-  }),
-  rootRouter
+    exposedHeaders: ["Authorization"],
+  })
 );
+
+app.use(express.json());
+app.use(loggingMiddleware);
+app.use("/api/v1", rootRouter);
 
 export default app;
