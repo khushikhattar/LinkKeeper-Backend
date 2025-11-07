@@ -4,7 +4,6 @@ import { User } from "../models/user.model";
 import z from "zod";
 import { generateNanoId } from "../utils/helper";
 import { Link } from "../models/link.model";
-// Schema to validate adding new content
 const addSchema = z.object({
   link: z.string(),
   title: z.string(),
@@ -68,7 +67,6 @@ const DeleteContent = async (req: Request, res: Response) => {
       return;
     }
 
-    // Remove reference from user's content array
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { content: deleteId },
     });
